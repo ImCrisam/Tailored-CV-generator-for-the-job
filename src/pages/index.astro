@@ -1,0 +1,18 @@
+---
+import { DarkThemeToggle } from "flowbite-react";
+import RootLayout from "../layouts/index.astro";
+import ResponsiveForm from "../components/responsive-form";
+---
+
+<RootLayout>
+  <main class="items-center justify-center gap-2 p-5 dark:text-gray-400">
+    <div>
+      <DarkThemeToggle client:load />
+    </div>
+    <div
+      class="mx-auto w-full max-w-lg space-y-4 rounded-xl bg-white p-6 shadow-md dark:bg-gray-800 dark:text-white sm:space-y-6 lg:w-3/4 lg:max-w-3xl"
+    >
+      <ResponsiveForm />
+    </div>
+  </main>
+</RootLayout>
