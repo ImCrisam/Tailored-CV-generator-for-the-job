@@ -1,17 +1,13 @@
-// src/api/generativeAI.ts
-import { generateContentGeminis } from "../IA/geminis";
-
 // Define la interfaz para la estructura de respuesta esperada
-interface FormatResponse<T> {
-  compatibilityScore: number;
-  cv: T;
-}
+
+import type { FormatResponse } from "./types";
 
 // Función asincrónica para generar el CV personalizado en formato Europass
-export const generateCVText = async <T>(
+export const generateCVText = async <T, J>(
   profileInfo: string,
   jobDescription: string,
   formatResponse: FormatResponse<T>,
+  generateContent: (data: string, config?: J) => Promise<string | null>,
 ): Promise<FormatResponse<T> | null> => {
   try {
     const prompt = `
@@ -28,8 +24,9 @@ export const generateCVText = async <T>(
       I need the response in the following JSON structure:
       ${JSON.stringify(formatResponse, null, 2)}
     `;
+    console.log({ prompt });
 
-    const response = await generateContentGeminis(prompt); // Asegúrate de esperar la respuesta
+    const response = await generateContent(prompt); // Asegúrate de esperar la respuesta
 
     // Aquí deberías convertir la respuesta en el tipo FormatResponse
     if (!response) {

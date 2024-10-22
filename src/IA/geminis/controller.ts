@@ -1,13 +1,15 @@
 // src/api/generativeAI.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import type { configGeminis } from "./type";
 
 // Función asincrónica para generar contenido
 export const generateContentGeminis = async (
+  config: configGeminis,
   prompt: string,
 ): Promise<string | null> => {
   try {
     // Crear instancia del cliente de Google Generative AI
-    const genAI = new GoogleGenerativeAI("apiKey");
+    const genAI = new GoogleGenerativeAI(config.apiKey);
 
     // Obtener el modelo generativo (en este caso gemini-1.5-flash)
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });

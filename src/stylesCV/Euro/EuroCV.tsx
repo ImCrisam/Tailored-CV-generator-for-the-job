@@ -1,9 +1,9 @@
 // En tu componente de React o donde necesites generar el PDF
 import React from "react";
 import { generatePDFFromHTML } from "../../generateFile/generatepdf";
-import type { TypeCV } from "./type";
+import type { TypeCVEuro } from "./type";
 interface CVComponentProps {
-  cvData: TypeCV;
+  cvData: TypeCVEuro;
 }
 const EuroCV: React.FC<CVComponentProps> = ({ cvData }) => {
   const cvRef = React.useRef<HTMLDivElement>(null);

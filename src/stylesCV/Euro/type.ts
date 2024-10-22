@@ -1,3 +1,5 @@
+import type { FormatResponse } from "../../generateFile/types";
+
 export interface PersonalInfo {
   address: string;
   phone: string;
@@ -17,7 +19,7 @@ export interface Education {
   dates: string;
 }
 
-export interface TypeCV {
+export interface TypeCVEuro {
   name: string;
   jobTitle: string;
   personalInfo: PersonalInfo;
@@ -25,3 +27,32 @@ export interface TypeCV {
   education: Education[];
   skills: string[];
 }
+
+export const formatResponseEuro: FormatResponse<TypeCVEuro> = {
+  compatibilityScore: 0,
+  cv: {
+    name: "",
+    jobTitle: "",
+    personalInfo: {
+      address: "",
+      phone: "",
+      email: "",
+    },
+    workExperience: [
+      {
+        title: "",
+        company: "",
+        dates: "",
+        responsibilities: [],
+      },
+    ],
+    education: [
+      {
+        degree: "",
+        institution: "",
+        dates: "",
+      },
+    ],
+    skills: [],
+  },
+};
