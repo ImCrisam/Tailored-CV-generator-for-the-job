@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Label, Textarea, Button, Select } from "flowbite-react";
 import ConfigForm from "../IA/geminis/configForm";
 import type { configGeminis } from "../IA/geminis/type";
@@ -13,21 +13,21 @@ const ResponsiveForm: React.FC = () => {
   const [aiType, setAiType] = useState<string>("gemini");
 
   const [config, setConfig] = useState<configGeminis>({
-    apiKey: "",
+    apiKey: "AIzaSyD8Lx8JmC-Q9WJeSIkJwfsTlOjVK92Uyvg",
     model: "",
   });
 
   // Manejador del botón enviar
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const typeFormatCv = formatResponseEuro;
-    generateCVText(
+    const jsonCv = await generateCVText(
       profileInfo,
       jobInfo,
       typeFormatCv,
       generateContentGeminis.bind(null, config),
     );
+    console.log({ jsonCv });
   };
-
   const switchConfigForm = () => {
     switch (aiType) {
       case "gemini":

@@ -1,5 +1,6 @@
 // Define la interfaz para la estructura de respuesta esperada
 
+import { extractionJson } from "../utils/extractionJson";
 import type { FormatResponse } from "./types";
 
 // Función asincrónica para generar el CV personalizado en formato Europass
@@ -23,17 +24,21 @@ export const generateCVText = async <T, J>(
 
       I need the response in the following JSON structure:
       ${JSON.stringify(formatResponse, null, 2)}
+
+    (response only json)
     `;
     console.log({ prompt });
 
     const response = await generateContent(prompt); // Asegúrate de esperar la respuesta
+    const responseJsonSting = extractionJson(response);
 
     // Aquí deberías convertir la respuesta en el tipo FormatResponse
     if (!response) {
       throw new Error("Received null response from the AI.");
     }
-
-    const parsedResponse: FormatResponse<T> = await JSON.parse(response);
+    console.log({ responseJsonSting });
+    const parsedResponse: FormatResponse<T> =
+      await JSON.parse(responseJsonSting);
 
     return parsedResponse; // Asegúrate de esperar la respuesta
   } catch (error) {
