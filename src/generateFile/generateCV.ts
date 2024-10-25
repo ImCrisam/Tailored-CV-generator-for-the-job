@@ -9,6 +9,7 @@ export const generateCVText = async <T, J>(
   jobDescription: string,
   formatResponse: FormatResponse<T>,
   generateContent: (data: string, config?: J) => Promise<string | null>,
+  formatPrompts?: string,
 ): Promise<FormatResponse<T> | null> => {
   try {
     const prompt = `
@@ -26,17 +27,20 @@ export const generateCVText = async <T, J>(
       ${JSON.stringify(formatResponse, null, 2)}
 
     (response only json)
-    `;
-    console.log({ prompt });
+    ${formatPrompts}
 
-    const response = await generateContent(prompt); // Asegúrate de esperar la respuesta
+    
+    `;
+    const response = await generateContent(prompt);
+    if (!response) return null;
+    // Asegúrate de esperar la respuesta
     const responseJsonSting = extractionJson(response);
 
     // Aquí deberías convertir la respuesta en el tipo FormatResponse
     if (!response) {
       throw new Error("Received null response from the AI.");
     }
-    console.log({ responseJsonSting });
+    if(!responseJsonSting) return null
     const parsedResponse: FormatResponse<T> =
       await JSON.parse(responseJsonSting);
 

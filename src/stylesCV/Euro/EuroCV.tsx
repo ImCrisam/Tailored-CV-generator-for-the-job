@@ -1,12 +1,17 @@
-// En tu componente de React o donde necesites generar el PDF
-import React from "react";
-import { generatePDFFromHTML } from "../../generateFile/generatepdf";
+import { useRef } from "react";
+import "./styles.css";
+import type { FormatResponse } from "../../generateFile/types";
 import type { TypeCVEuro } from "./type";
+import { generatePDFFromHTML } from "../../generateFile/generatepdf";
+
 interface CVComponentProps {
-  cvData: TypeCVEuro;
+  cvData: FormatResponse<TypeCVEuro>;
 }
+
 const EuroCV: React.FC<CVComponentProps> = ({ cvData }) => {
-  const cvRef = React.useRef<HTMLDivElement>(null);
+  const { compatibilityScore: score, cv: data } = cvData; // Desestructuramos el score y cv por separado
+
+  const cvRef = useRef<HTMLDivElement>(null);
 
   const handleGeneratePDF = () => {
     if (cvRef.current) {
@@ -19,29 +24,29 @@ const EuroCV: React.FC<CVComponentProps> = ({ cvData }) => {
       <button onClick={handleGeneratePDF}>Generar PDF</button>
       <div ref={cvRef} className="cv-container">
         <header>
-          <h1 id="name">{cvData.name}</h1>
-          <p id="job-title">{cvData.jobTitle}</p>
+          <h1 id="name">{data?.name}</h1>
+          <p id="job-title">{data?.jobTitle}</p>
         </header>
 
         <section className="personal-info">
           <h2>Personal Information</h2>
           <p>
             <strong>Address:</strong>{" "}
-            <span id="address">{cvData.personalInfo.address}</span>
+            <span id="address">{data?.personalInfo?.address}</span>
           </p>
           <p>
             <strong>Phone:</strong>{" "}
-            <span id="phone">{cvData.personalInfo.phone}</span>
+            <span id="phone">{data?.personalInfo?.phone}</span>
           </p>
           <p>
             <strong>Email:</strong>{" "}
-            <span id="email">{cvData.personalInfo.email}</span>
+            <span id="email">{data?.personalInfo?.email}</span>
           </p>
         </section>
 
         <section className="work-experience">
           <h2>Work Experience</h2>
-          {cvData.workExperience.map((job, index) => (
+          {data?.workExperience?.map((job, index) => (
             <div className="job" key={index}>
               <h3>
                 {job.title} at {job.company}
@@ -60,12 +65,12 @@ const EuroCV: React.FC<CVComponentProps> = ({ cvData }) => {
 
         <section className="education">
           <h2>Education</h2>
-          {cvData.education.map((edu, index) => (
+          {data?.education?.map((edu, index) => (
             <div className="degree" key={index}>
               <h3>{edu.degree}</h3>
               <p>
                 <em>
-                  {edu.institution} - {edu.dates}
+                  {edu?.institution} - {edu?.dates}
                 </em>
               </p>
             </div>
@@ -75,11 +80,18 @@ const EuroCV: React.FC<CVComponentProps> = ({ cvData }) => {
         <section className="skills">
           <h2>Skills</h2>
           <ul>
-            {cvData.skills.map((skill, index) => (
-              <li key={index}>{skill}</li>
-            ))}
+            {data?.skills
+              ?.slice(0, 20)
+              .map((skill, index) => <li key={index}>{skill}</li>)}
           </ul>
         </section>
+
+        {/* Muestra el score de compatibilidad si lo necesitas */}
+        <footer>
+          <p>
+            <strong>Compatibility Score:</strong> {score}
+          </p>
+        </footer>
       </div>
     </div>
   );

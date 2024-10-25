@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Label, Textarea, Button, Select } from "flowbite-react";
+import { Label, Textarea, Button, Select, Modal } from "flowbite-react";
 import ConfigForm from "../IA/geminis/configForm";
 import type { configGeminis } from "../IA/geminis/type";
 import { generateCVText } from "../generateFile/generateCV";
 import { formatResponseEuro } from "../stylesCV/Euro/type";
 import { generateContentGeminis } from "../IA/geminis/controller";
+import EuroCV from "../stylesCV/Euro/EuroCV";
 
 const ResponsiveForm: React.FC = () => {
   // Estados para los campos del formulario
@@ -17,6 +18,9 @@ const ResponsiveForm: React.FC = () => {
     model: "",
   });
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [cvResult, setCvResult] = useState<any | null>(formatResponseEuro);
+
   // Manejador del botón enviar
   const handleSubmit = async () => {
     const typeFormatCv = formatResponseEuro;
@@ -26,7 +30,10 @@ const ResponsiveForm: React.FC = () => {
       typeFormatCv,
       generateContentGeminis.bind(null, config),
     );
-    console.log({ jsonCv });
+    setCvResult({ ...typeFormatCv, ...jsonCv });
+    console.log({ ...typeFormatCv, ...jsonCv });
+
+    setModalOpen(true);
   };
   const switchConfigForm = () => {
     switch (aiType) {
@@ -94,6 +101,15 @@ const ResponsiveForm: React.FC = () => {
       >
         Enviar
       </Button>
+      <Modal show={modalOpen} onClose={() => setModalOpen(false)}>
+        <Modal.Header>Resultado del CV</Modal.Header>
+        <Modal.Body>
+          <EuroCV cvData={cvResult}></EuroCV>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setModalOpen(false)}>Cerrar</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
